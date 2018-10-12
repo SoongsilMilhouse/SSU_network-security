@@ -38,7 +38,6 @@ typedef struct img_ack{
 	char res_msg[MAX_RESMSG_LEN];
 } IMG_ACK;
 
-
 void printPacketInformation(PACKET_HEADER *head, void *msg);
 
 #endif /* PACKET_H_ */

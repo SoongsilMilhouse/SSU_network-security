@@ -52,8 +52,10 @@ int Packet_Handler(unsigned char *src, unsigned char **dst, int msgType, size_t*
 		printf("\nImg Send recevied\n");
 		decode_ImgSend(src, &imgSend);	//Decoding Image
 
-		fp = fopen("./image.jpg", "wb");
+		fp = fopen("image.jpg", "wb");
+		//fp = open("image.jpg", O_RDWR|O_CREAT|O_TRUNC);
 		fwrite(imgSend->img, sizeof(unsigned char), imgSend->imgLength, fp);
+		//write(fp, img, imgLen);
 		fclose(fp);
 
 		char *res_msg = "IMG SEND Success!";

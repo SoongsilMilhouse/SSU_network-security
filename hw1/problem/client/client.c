@@ -20,11 +20,10 @@ int main(int argc, char *argv[])
 	int sock;
 	struct sockaddr_in serv_adr;
 	int length, recv_len = 0;
-	int imgLength, img_recv_len = 0;
+	int imgLength;
 	unsigned char *message, *sendBuf = NULL;
 	char id[MAX_ID_LEN] = {0}, password[MAX_PWD_LEN] = {0};
-	FILE *picture;
-	size_t result;
+	FILE *fd;
 
 	PACKET_HEADER *header;
 	LOGIN_REQ *loginReq;
@@ -84,21 +83,24 @@ int main(int argc, char *argv[])
 	//Receiving Login Ack packet
 	recv_len = read_msg(sock, &message, &header);
 
-	//Generating Img Send Message
+
+	//Generating Image Send Message
 	imgSend = (IMG_SEND *)calloc(1, sizeof(IMG_SEND));
-	if(!(picture = fopen("image.jpg", "rb"))) 
-		fprintf(stderr, "Unable to open file %s", "image.jpg");
+	
+	 if(!(fd= fopen("image.jpg", "rb"))) 
+		 fprintf(stderr, "Unable to open file %s", "image.jpg");
 
-	fseek(picture, 0, SEEK_END);
-	imgLength = ftell(picture);
-	fseek(picture, 0, SEEK_SET);
+    fseek(fd, 0, SEEK_END);
+    imgLength = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
 
-	imgSend->imgLength = imgLength;
 	imgSend->img = (unsigned char *)calloc(imgLength, sizeof(unsigned char));
-	fread(imgSend->img, sizeof(unsigned char), imgLength, picture);
 
-	//Encoding Img 
-	encode_packet(MT_IMG_SEND, (void *)imgSend, &sendBuf);
+	fread(imgSend->img, sizeof(unsigned char), imgLength, fd);
+	fclose(fd);
+
+	//Encoding Image
+	imgLength += encode_packet(MT_IMG_SEND, (void *)imgSend, &sendBuf);
 
 	if(recv_len > 0)
 	{
@@ -114,7 +116,6 @@ int main(int argc, char *argv[])
 				//Receiving Image Ack packet
 				recv_len = read_msg(sock, &message, &header);
 				if(recv_len > 0) {
-					printf("sadjkfasdf\n");
 					Packet_Handler(message, NULL, header->msgType, &length);
 				}
 				else {

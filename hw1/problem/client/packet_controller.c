@@ -8,7 +8,6 @@ int Packet_Handler(unsigned char *src, unsigned char **dst, int msgType, int *ds
 {
 	LOGIN_ACK *loginAck;
 	IMG_ACK *imgAck;
-	// how to use *imgBuf(already defined by prof)
 	unsigned char *imgBuf;
 	FILE *fp;
 	int rv;
@@ -32,5 +31,6 @@ int Packet_Handler(unsigned char *src, unsigned char **dst, int msgType, int *ds
 		rv = -1;
 		break;
 	}
+
 	return rv;
 }

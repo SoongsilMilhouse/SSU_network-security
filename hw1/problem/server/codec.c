@@ -104,13 +104,13 @@ int decode_LoginAck(unsigned char *src, LOGIN_ACK **dst)
 int encode_ImgSend(IMG_SEND *src, unsigned char **dst)
 {
 	unsigned char *pt;
-	int length;
+	int imgLength;
 
 	*dst = (unsigned char *)calloc(1, sizeof(int) + src->imgLength);
 	pt = *dst;
 
-	length = htonl(src->imgLength);
-	memcpy(pt, &length, sizeof(int));
+	imgLength = htonl(src->imgLength);
+	memcpy(pt, &imgLength, sizeof(int));
 	pt += sizeof(int);
 
 	memcpy(pt, src->img, src->imgLength);
@@ -135,16 +135,17 @@ int decode_ImgSend(unsigned char *src, IMG_SEND **dst)
 
 	return sizeof(IMG_SEND);
 }
+
 int encode_ImgAck(IMG_ACK *src, unsigned char **dst)
 {
 	unsigned char *pt;
-	int imgResult;
+	int result;
 
 	*dst = (unsigned char *)calloc(1, sizeof(IMG_ACK));
 	pt = *dst;
 
-	imgResult = htonl(src->imgResult);
-	memcpy(pt, &imgResult, sizeof(int));
+	result = htonl(src->imgResult);
+	memcpy(pt, &result, sizeof(int));
 	pt += sizeof(int);
 
 	memcpy(pt, src->res_msg, sizeof(src->res_msg));
@@ -155,13 +156,13 @@ int encode_ImgAck(IMG_ACK *src, unsigned char **dst)
 int decode_ImgAck(unsigned char *src, IMG_ACK **dst)
 {
 	unsigned char *pt;
-	int imgResult;
+	int result;
 
 	pt = src;
 	*dst = (IMG_ACK *)calloc(1, sizeof(IMG_ACK));
 
-	memcpy(&imgResult, pt, sizeof(int));
-	(*dst)->imgResult = ntohl(imgResult);
+	memcpy(&result, pt, sizeof(int));
+	(*dst)->imgResult = ntohl(result);
 	pt += sizeof(int);
 
 	memcpy((*dst)->res_msg, pt, sizeof((*dst)->res_msg));
