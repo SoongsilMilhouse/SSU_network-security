@@ -135,6 +135,7 @@ int decode_ImgSend(unsigned char *src, IMG_SEND **dst)
 
 	return sizeof(IMG_SEND);
 }
+
 int encode_ImgAck(IMG_ACK *src, unsigned char **dst)
 {
 	unsigned char *pt;
@@ -219,5 +220,3 @@ int encode_packet(int msgType, void *msg, unsigned char **dst)
 
 	return (headLen + msgLen);
 }
-
-
